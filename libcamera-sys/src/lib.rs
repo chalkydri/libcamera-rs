@@ -6,5 +6,5 @@
 // libcamera documentation is incorrectly interpreted as rust code blocks
 #![allow(rustdoc::invalid_rust_codeblocks)]
 
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
-include!(concat!(env!("OUT_DIR"), "/bindings_cpp.rs"));
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/bindings.rs"));
+include!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/bindings_cpp.rs"));

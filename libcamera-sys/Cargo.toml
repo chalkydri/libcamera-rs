@@ -10,6 +10,9 @@ keywords = ["libcamera", "camera"]
 categories = ["external-ffi-bindings", "computer-vision", "multimedia"]
 readme = "../README.md"
 
+[features]
+__bindgen = ["dep:bindgen"]
+
 [lib]
 # libcamera comments are interpreted as rust code blocks failing the doctest
 doctest = false
@@ -17,6 +20,6 @@ doctest = false
 [dependencies]
 
 [build-dependencies]
-bindgen = { version = "0.66.1", default-features = false }
-pkg-config = "0.3.26"
-cc = "1.0"
+bindgen = { version = "0.71.1", default-features = false, features = ["runtime"], optional = true }
+pkg-config = "0.3.31"
+cc = "1"

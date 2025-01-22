@@ -55,6 +55,8 @@ fn main() {
         .include(libcamera_include_path)
         .compile("camera_c_api");
 
+    #[cfg(feature = "__bindgen")]
+    {
     // C bindings
     let mut builder = bindgen::Builder::default()
         .clang_arg(format!("-I{}", libcamera_include_path.display()))
@@ -69,9 +71,9 @@ fn main() {
 
     let bindings = builder.generate().expect("Unable to generate bindings");
 
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let out_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file(out_path.join("src/bindings.rs"))
         .expect("Couldn't write bindings!");
 
     // CPP bindings
@@ -86,6 +88,7 @@ fn main() {
 
     let bindings = builder.generate().expect("Unable to generate bindings");
     bindings
-        .write_to_file(out_path.join("bindings_cpp.rs"))
+        .write_to_file(out_path.join("src/bindings_cpp.rs"))
         .expect("Couldn't write bindings!");
+        }
 }
