@@ -13,6 +13,8 @@ readme = "../README.md"
 [features]
 default = ["vendor_draft", "libcamera_semver_versioning"]
 
+__bindgen = ["libcamera-sys/__bindgen"]
+
 # Fallback to semver compatible libcamera control/property bindings when exact version is unavailable
 libcamera_semver_versioning = []
 
