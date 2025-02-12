@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-#include <libcamera/controls.h>
+#include <libcamera/libcamera/controls.h>
 
 struct libcamera_control_list_iter {
 	libcamera::ControlList *list;

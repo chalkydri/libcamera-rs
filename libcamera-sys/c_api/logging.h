@@ -18,7 +18,7 @@ typedef enum libcamera_logging_stream libcamera_logging_stream_t;
 #ifdef __cplusplus
 
 #include <ostream>
-#include <libcamera/logging.h>
+#include <libcamera/libcamera/logging.h>
 
 typedef libcamera::LoggingTarget libcamera_logging_target_t;
 

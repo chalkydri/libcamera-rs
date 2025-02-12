@@ -1,6 +1,5 @@
 #include "controls.h"
 
-#include <libcamera/libcamera.h>
 #include <string.h>
 
 extern "C" {

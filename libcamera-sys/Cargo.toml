@@ -11,6 +11,7 @@ categories = ["external-ffi-bindings", "computer-vision", "multimedia"]
 readme = "../README.md"
 
 [features]
+default = ["__bindgen"]
 __bindgen = ["dep:bindgen"]
 
 [lib]
@@ -18,6 +19,7 @@ __bindgen = ["dep:bindgen"]
 doctest = false
 
 [dependencies]
+cxx = "1.0.137"
 
 [build-dependencies]
 bindgen = { version = "0.71.1", default-features = false, features = ["runtime"], optional = true }

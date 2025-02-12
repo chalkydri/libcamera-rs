@@ -80,8 +80,12 @@ fn main() {
     let mut builder = bindgen::Builder::default()
         .clang_arg(format!("-I{}", libcamera_include_path.display()))
         .clang_arg("-std=c++17")
-        .allowlist_type(".*controls.*")
-        .allowlist_type(".*properties.*");
+        .enable_cxx_namespaces()
+        .wrap_static_fns(true)
+        .blocklist_var("std::.*")
+        .allowlist_var("libcamera::.*");
+        //.allowlist_type(".*controls.*")
+        //.allowlist_type(".*properties.*")
     for header in cpp_api_headers {
         builder = builder.header(header.to_str().unwrap());
     }
