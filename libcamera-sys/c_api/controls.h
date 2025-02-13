@@ -7,6 +7,8 @@
 
 #ifdef __cplusplus
 #include <libcamera/libcamera/controls.h>
+#include <libcamera/libcamera/property_ids.h>
+#include <libcamera/libcamera/control_ids.h>
 
 struct libcamera_control_list_iter {
 	libcamera::ControlList *list;

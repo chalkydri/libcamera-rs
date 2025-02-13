@@ -57,42 +57,43 @@ fn main() {
 
     #[cfg(feature = "__bindgen")]
     {
-    // C bindings
-    let mut builder = bindgen::Builder::default()
-        .clang_arg(format!("-I{}", libcamera_include_path.display()))
-        .constified_enum_module("libcamera_.*")
-        .allowlist_function("libcamera_.*")
-        .allowlist_var("LIBCAMERA_.*")
-        .allowlist_var(".*LIBCAMERA_VERSION.*")
-        .allowlist_type("libcamera_.*");
-    for header in c_api_headers {
-        builder = builder.header(header.to_str().unwrap());
-    }
-
-    let bindings = builder.generate().expect("Unable to generate bindings");
-
-    let out_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
-    bindings
-        .write_to_file(out_path.join("src/bindings.rs"))
-        .expect("Couldn't write bindings!");
-
-    // CPP bindings
-    let mut builder = bindgen::Builder::default()
-        .clang_arg(format!("-I{}", libcamera_include_path.display()))
-        .clang_arg("-std=c++17")
-        .enable_cxx_namespaces()
-        .wrap_static_fns(true)
-        .blocklist_var("std::.*")
-        .allowlist_var("libcamera::.*");
-        //.allowlist_type(".*controls.*")
-        //.allowlist_type(".*properties.*")
-    for header in cpp_api_headers {
-        builder = builder.header(header.to_str().unwrap());
-    }
-
-    let bindings = builder.generate().expect("Unable to generate bindings");
-    bindings
-        .write_to_file(out_path.join("src/bindings_cpp.rs"))
-        .expect("Couldn't write bindings!");
+        // C bindings
+        let mut builder = bindgen::Builder::default()
+            .clang_arg(format!("-I{}", libcamera_include_path.display()))
+            .constified_enum_module("libcamera_.*")
+            .allowlist_function("libcamera_.*")
+            .allowlist_var("LIBCAMERA_.*")
+            .allowlist_var(".*LIBCAMERA_VERSION.*")
+            .allowlist_type("libcamera_.*");
+        for header in c_api_headers {
+            builder = builder.header(header.to_str().unwrap());
         }
+
+        let bindings = builder.generate().expect("Unable to generate bindings");
+
+        let out_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+        bindings
+            .write_to_file(out_path.join("src/bindings.rs"))
+            .expect("Couldn't write bindings!");
+
+        // CPP bindings
+        let mut builder = bindgen::Builder::default()
+            .clang_arg(format!("-I{}", libcamera_include_path.display()))
+            .clang_arg("-std=c++17")
+            .enable_cxx_namespaces()
+            .wrap_static_fns(true)
+            .blocklist_item("std::.*")
+            .blocklist_item("__gnu_cxx::.*")
+            //.allowlist_var("libcamera::.*");
+            .allowlist_type(".*controls.*")
+            .allowlist_type(".*properties.*");
+        for header in cpp_api_headers {
+            builder = builder.header(header.to_str().unwrap());
+        }
+
+        let bindings = builder.generate().expect("Unable to generate bindings");
+        bindings
+            .write_to_file(out_path.join("src/bindings_cpp.rs"))
+            .expect("Couldn't write bindings!");
+    }
 }
