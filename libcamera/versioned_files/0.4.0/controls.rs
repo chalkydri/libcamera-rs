@@ -4,7 +4,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use crate::control::{Control, Property, ControlEntry, DynControlEntry};
 use crate::control_value::{ControlValue, ControlValueError};
 #[allow(unused_imports)]
-use crate::geometry::{Rectangle, Size};
+use crate::geometry::{Rectangle, Size, Point};
 #[allow(unused_imports)]
 use libcamera_sys::*;
 #[derive(Debug, Clone, Copy, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
@@ -13,7 +13,7 @@ pub enum ControlId {
     /// Enable or disable the AE.
     ///
     /// \sa ExposureTime AnalogueGain
-    AeEnable = AE_ENABLE,
+    AeEnable = libcamera_sys::root::libcamera::controls::controls_AE_ENABLE,
     /// Report the lock status of a running AE algorithm.
     ///
     /// If the AE algorithm is locked the value shall be set to true, if it's
@@ -21,25 +21,25 @@ pub enum ControlId {
     /// running the control shall not be present in the metadata control list.
     ///
     /// \sa AeEnable
-    AeLocked = AE_LOCKED,
+    AeLocked = libcamera_sys::root::libcamera::controls::controls_AE_LOCKED,
     /// Specify a metering mode for the AE algorithm to use.
     ///
     /// The metering modes determine which parts of the image are used to
     /// determine the scene brightness. Metering modes may be platform specific
     /// and not all metering modes may be supported.
-    AeMeteringMode = AE_METERING_MODE,
+    AeMeteringMode = libcamera_sys::root::libcamera::controls::controls_AE_METERING_MODE,
     /// Specify a constraint mode for the AE algorithm to use.
     ///
     /// The constraint modes determine how the measured scene brightness is
     /// adjusted to reach the desired target exposure. Constraint modes may be
     /// platform specific, and not all constraint modes may be supported.
-    AeConstraintMode = AE_CONSTRAINT_MODE,
+    AeConstraintMode = libcamera_sys::root::libcamera::controls::controls_AE_CONSTRAINT_MODE,
     /// Specify an exposure mode for the AE algorithm to use.
     ///
     /// The exposure modes specify how the desired total exposure is divided
     /// between the exposure time and the sensor's analogue gain. They are
     /// platform specific, and not all exposure modes may be supported.
-    AeExposureMode = AE_EXPOSURE_MODE,
+    AeExposureMode = libcamera_sys::root::libcamera::controls::controls_AE_EXPOSURE_MODE,
     /// Specify an Exposure Value (EV) parameter.
     ///
     /// The EV parameter will only be applied if the AE algorithm is currently
@@ -50,7 +50,7 @@ pub enum ControlId {
     /// of [1/4x, 1/2x, 1/sqrt(2)x, 1x, sqrt(2)x, 2x, 4x].
     ///
     /// \sa AeEnable
-    ExposureValue = EXPOSURE_VALUE,
+    ExposureValue = libcamera_sys::root::libcamera::controls::controls_EXPOSURE_VALUE,
     /// Exposure time for the frame applied in the sensor device.
     ///
     /// This value is specified in micro-seconds.
@@ -66,7 +66,7 @@ pub enum ControlId {
     /// such as aperture and aperture/shutter priority mode, and decide if
     /// control of which features should be automatically adjusted shouldn't
     /// better be handled through a separate AE mode control.
-    ExposureTime = EXPOSURE_TIME,
+    ExposureTime = libcamera_sys::root::libcamera::controls::controls_EXPOSURE_TIME,
     /// Analogue gain value applied in the sensor device.
     ///
     /// The value of the control specifies the gain multiplier applied to all
@@ -83,7 +83,7 @@ pub enum ControlId {
     /// such as aperture and aperture/shutter priority mode, and decide if
     /// control of which features should be automatically adjusted shouldn't
     /// better be handled through a separate AE mode control.
-    AnalogueGain = ANALOGUE_GAIN,
+    AnalogueGain = libcamera_sys::root::libcamera::controls::controls_ANALOGUE_GAIN,
     /// Set the flicker avoidance mode for AGC/AEC.
     ///
     /// The flicker mode determines whether, and how, the AGC/AEC algorithm
@@ -98,7 +98,7 @@ pub enum ControlId {
     ///
     /// By default the system will start in FlickerAuto mode if this is
     /// supported, otherwise the flicker mode will be set to FlickerOff.
-    AeFlickerMode = AE_FLICKER_MODE,
+    AeFlickerMode = libcamera_sys::root::libcamera::controls::controls_AE_FLICKER_MODE,
     /// Manual flicker period in microseconds.
     ///
     /// This value sets the current flicker period to avoid. It is used when
@@ -115,7 +115,7 @@ pub enum ControlId {
     /// value of the AeFlickerPeriod control.
     ///
     /// \sa AeFlickerMode
-    AeFlickerPeriod = AE_FLICKER_PERIOD,
+    AeFlickerPeriod = libcamera_sys::root::libcamera::controls::controls_AE_FLICKER_PERIOD,
     /// Flicker period detected in microseconds.
     ///
     /// The value reported here indicates the currently detected flicker
@@ -134,21 +134,21 @@ pub enum ControlId {
     /// cancelled.
     ///
     /// \sa AeFlickerMode
-    AeFlickerDetected = AE_FLICKER_DETECTED,
+    AeFlickerDetected = libcamera_sys::root::libcamera::controls::controls_AE_FLICKER_DETECTED,
     /// Specify a fixed brightness parameter.
     ///
     /// Positive values (up to 1.0) produce brighter images; negative values
     /// (up to -1.0) produce darker images and 0.0 leaves pixels unchanged.
-    Brightness = BRIGHTNESS,
+    Brightness = libcamera_sys::root::libcamera::controls::controls_BRIGHTNESS,
     /// Specify a fixed contrast parameter.
     ///
     /// Normal contrast is given by the value 1.0; larger values produce images
     /// with more contrast.
-    Contrast = CONTRAST,
+    Contrast = libcamera_sys::root::libcamera::controls::controls_CONTRAST,
     /// Report an estimate of the current illuminance level in lux.
     ///
     /// The Lux control can only be returned in metadata.
-    Lux = LUX,
+    Lux = libcamera_sys::root::libcamera::controls::controls_LUX,
     /// Enable or disable the AWB.
     ///
     /// When AWB is enabled, the algorithm estimates the colour temperature of
@@ -164,12 +164,12 @@ pub enum ControlId {
     /// \sa ColourCorrectionMatrix
     /// \sa ColourGains
     /// \sa ColourTemperature
-    AwbEnable = AWB_ENABLE,
+    AwbEnable = libcamera_sys::root::libcamera::controls::controls_AWB_ENABLE,
     /// Specify the range of illuminants to use for the AWB algorithm.
     ///
     /// The modes supported are platform specific, and not all modes may be
     /// supported.
-    AwbMode = AWB_MODE,
+    AwbMode = libcamera_sys::root::libcamera::controls::controls_AWB_MODE,
     /// Report the lock status of a running AWB algorithm.
     ///
     /// If the AWB algorithm is locked the value shall be set to true, if it's
@@ -177,7 +177,7 @@ pub enum ControlId {
     /// running the control shall not be present in the metadata control list.
     ///
     /// \sa AwbEnable
-    AwbLocked = AWB_LOCKED,
+    AwbLocked = libcamera_sys::root::libcamera::controls::controls_AWB_LOCKED,
     /// Pair of gain values for the Red and Blue colour channels, in that
     /// order.
     ///
@@ -188,7 +188,7 @@ pub enum ControlId {
     ///
     /// \sa AwbEnable
     /// \sa ColourTemperature
-    ColourGains = COLOUR_GAINS,
+    ColourGains = libcamera_sys::root::libcamera::controls::controls_COLOUR_GAINS,
     /// ColourTemperature of the frame, in kelvin.
     ///
     /// ColourTemperature can only be applied in a Request when the AWB is
@@ -205,18 +205,18 @@ pub enum ControlId {
     /// \sa AwbEnable
     /// \sa ColourCorrectionMatrix
     /// \sa ColourGains
-    ColourTemperature = COLOUR_TEMPERATURE,
+    ColourTemperature = libcamera_sys::root::libcamera::controls::controls_COLOUR_TEMPERATURE,
     /// Specify a fixed saturation parameter.
     ///
     /// Normal saturation is given by the value 1.0; larger values produce more
     /// saturated colours; 0.0 produces a greyscale image.
-    Saturation = SATURATION,
+    Saturation = libcamera_sys::root::libcamera::controls::controls_SATURATION,
     /// Reports the sensor black levels used for processing a frame.
     ///
     /// The values are in the order R, Gr, Gb, B. They are returned as numbers
     /// out of a 16-bit pixel range (as if pixels ranged from 0 to 65535). The
     /// SensorBlackLevels control can only be returned in metadata.
-    SensorBlackLevels = SENSOR_BLACK_LEVELS,
+    SensorBlackLevels = libcamera_sys::root::libcamera::controls::controls_SENSOR_BLACK_LEVELS,
     /// Intensity of the sharpening applied to the image.
     ///
     /// A value of 0.0 means no sharpening. The minimum value means
@@ -227,7 +227,7 @@ pub enum ControlId {
     /// higher than anyone could reasonably want. Negative values are
     /// not allowed. Note also that sharpening is not applied to raw
     /// streams.
-    Sharpness = SHARPNESS,
+    Sharpness = libcamera_sys::root::libcamera::controls::controls_SHARPNESS,
     /// Reports a Figure of Merit (FoM) to indicate how in-focus the frame is.
     ///
     /// A larger FocusFoM value indicates a more in-focus frame. This singular
@@ -236,7 +236,7 @@ pub enum ControlId {
     /// method of combination is platform dependent. In this respect, it is not
     /// necessarily aimed at providing a way to implement a focus algorithm by
     /// the application, rather an indication of how in-focus a frame is.
-    FocusFoM = FOCUS_FO_M,
+    FocusFoM = libcamera_sys::root::libcamera::controls::controls_FOCUS_FO_M,
     /// The 3x3 matrix that converts camera RGB to sRGB within the imaging
     /// pipeline.
     ///
@@ -250,7 +250,7 @@ pub enum ControlId {
     ///
     /// \sa AwbEnable
     /// \sa ColourTemperature
-    ColourCorrectionMatrix = COLOUR_CORRECTION_MATRIX,
+    ColourCorrectionMatrix = libcamera_sys::root::libcamera::controls::controls_COLOUR_CORRECTION_MATRIX,
     /// Sets the image portion that will be scaled to form the whole of
     /// the final output image.
     ///
@@ -262,7 +262,7 @@ pub enum ControlId {
     /// This control is only present when the pipeline supports scaling. Its
     /// maximum valid value is given by the properties::ScalerCropMaximum
     /// property, and the two can be used to implement digital zoom.
-    ScalerCrop = SCALER_CROP,
+    ScalerCrop = libcamera_sys::root::libcamera::controls::controls_SCALER_CROP,
     /// Digital gain value applied during the processing steps applied
     /// to the image as captured from the sensor.
     ///
@@ -276,12 +276,12 @@ pub enum ControlId {
     /// Pipelines are free to decide how to adjust each processing
     /// step to respect the received gain factor and shall report
     /// their total value in the request metadata.
-    DigitalGain = DIGITAL_GAIN,
+    DigitalGain = libcamera_sys::root::libcamera::controls::controls_DIGITAL_GAIN,
     /// The instantaneous frame duration from start of frame exposure to start
     /// of next exposure, expressed in microseconds.
     ///
     /// This control is meant to be returned in metadata.
-    FrameDuration = FRAME_DURATION,
+    FrameDuration = libcamera_sys::root::libcamera::controls::controls_FRAME_DURATION,
     /// The minimum and maximum (in that order) frame duration, expressed in
     /// microseconds.
     ///
@@ -312,7 +312,7 @@ pub enum ControlId {
     ///
     /// \todo Provide an explicit definition of default control values, for
     /// this and all other controls.
-    FrameDurationLimits = FRAME_DURATION_LIMITS,
+    FrameDurationLimits = libcamera_sys::root::libcamera::controls::controls_FRAME_DURATION_LIMITS,
     /// Temperature measure from the camera sensor in Celsius.
     ///
     /// This value is typically obtained by a thermal sensor present on-die or
@@ -321,7 +321,7 @@ pub enum ControlId {
     ///
     /// The SensorTemperature control will only be returned in metadata if a
     /// thermal sensor is present.
-    SensorTemperature = SENSOR_TEMPERATURE,
+    SensorTemperature = libcamera_sys::root::libcamera::controls::controls_SENSOR_TEMPERATURE,
     /// The time when the first row of the image sensor active array is exposed.
     ///
     /// The timestamp, expressed in nanoseconds, represents a monotonically
@@ -332,15 +332,15 @@ pub enum ControlId {
     ///
     /// \todo Define how the sensor timestamp has to be used in the reprocessing
     /// use case.
-    SensorTimestamp = SENSOR_TIMESTAMP,
+    SensorTimestamp = libcamera_sys::root::libcamera::controls::controls_SENSOR_TIMESTAMP,
     /// The mode of the AF (autofocus) algorithm.
     ///
     /// An implementation may choose not to implement all the modes.
-    AfMode = AF_MODE,
+    AfMode = libcamera_sys::root::libcamera::controls::controls_AF_MODE,
     /// The range of focus distances that is scanned.
     ///
     /// An implementation may choose not to implement all the options here.
-    AfRange = AF_RANGE,
+    AfRange = libcamera_sys::root::libcamera::controls::controls_AF_RANGE,
     /// Determine whether the AF is to move the lens as quickly as possible or
     /// more steadily.
     ///
@@ -348,9 +348,9 @@ pub enum ControlId {
     /// lens too abruptly, but when in a preview mode (waiting for a still
     /// capture) it may be helpful to move the lens as quickly as is reasonably
     /// possible.
-    AfSpeed = AF_SPEED,
+    AfSpeed = libcamera_sys::root::libcamera::controls::controls_AF_SPEED,
     /// The parts of the image used by the AF algorithm to measure focus.
-    AfMetering = AF_METERING,
+    AfMetering = libcamera_sys::root::libcamera::controls::controls_AF_METERING,
     /// The focus windows used by the AF algorithm when AfMetering is set to
     /// AfMeteringWindows.
     ///
@@ -374,20 +374,20 @@ pub enum ControlId {
     /// might find the optimal focus position for each one and finally select
     /// the window where the focal distance for the objects shown in that part
     /// of the image are closest to the camera.
-    AfWindows = AF_WINDOWS,
+    AfWindows = libcamera_sys::root::libcamera::controls::controls_AF_WINDOWS,
     /// Start an autofocus scan.
     ///
     /// This control starts an autofocus scan when AfMode is set to AfModeAuto,
     /// and is ignored if AfMode is set to AfModeManual or AfModeContinuous. It
     /// can also be used to terminate a scan early.
-    AfTrigger = AF_TRIGGER,
+    AfTrigger = libcamera_sys::root::libcamera::controls::controls_AF_TRIGGER,
     /// Pause lens movements when in continuous autofocus mode.
     ///
     /// This control has no effect except when in continuous autofocus mode
     /// (AfModeContinuous). It can be used to pause any lens movements while
     /// (for example) images are captured. The algorithm remains inactive
     /// until it is instructed to resume.
-    AfPause = AF_PAUSE,
+    AfPause = libcamera_sys::root::libcamera::controls::controls_AF_PAUSE,
     /// Set and report the focus lens position.
     ///
     /// This control instructs the lens to move to a particular position and
@@ -418,7 +418,7 @@ pub enum ControlId {
     ///
     /// \todo Define a property to report the Hyperfocal distance of calibrated
     /// lenses.
-    LensPosition = LENS_POSITION,
+    LensPosition = libcamera_sys::root::libcamera::controls::controls_LENS_POSITION,
     /// The current state of the AF algorithm.
     ///
     /// This control reports the current state of the AF algorithm in
@@ -438,7 +438,7 @@ pub enum ControlId {
     ///
     /// If the AfMode is set to AfModeContinuous then the AfState will
     /// initially report AfStateScanning.
-    AfState = AF_STATE,
+    AfState = libcamera_sys::root::libcamera::controls::controls_AF_STATE,
     /// Report whether the autofocus is currently running, paused or pausing.
     ///
     /// This control is only applicable in continuous (AfModeContinuous) mode,
@@ -447,7 +447,7 @@ pub enum ControlId {
     /// completes).
     ///
     /// Any change to AfMode will cause AfPauseStateRunning to be reported.
-    AfPauseState = AF_PAUSE_STATE,
+    AfPauseState = libcamera_sys::root::libcamera::controls::controls_AF_PAUSE_STATE,
     /// Set the mode to be used for High Dynamic Range (HDR) imaging.
     ///
     /// HDR techniques typically include multiple exposure, image fusion and
@@ -461,7 +461,7 @@ pub enum ControlId {
     /// using the HdrChannel control.
     ///
     /// \sa HdrChannel
-    HdrMode = HDR_MODE,
+    HdrMode = libcamera_sys::root::libcamera::controls::controls_HDR_MODE,
     /// The HDR channel used to capture the frame.
     ///
     /// This value is reported back to the application so that it can discover
@@ -473,54 +473,54 @@ pub enum ControlId {
     /// This metadata is only available when an HDR mode has been enabled.
     ///
     /// \sa HdrMode
-    HdrChannel = HDR_CHANNEL,
+    HdrChannel = libcamera_sys::root::libcamera::controls::controls_HDR_CHANNEL,
     /// Specify a fixed gamma value.
     ///
     /// The default gamma value must be 2.2 which closely mimics sRGB gamma.
     /// Note that this is camera gamma, so it is applied as 1.0/gamma.
-    Gamma = GAMMA,
+    Gamma = libcamera_sys::root::libcamera::controls::controls_GAMMA,
     /// Enable or disable the debug metadata.
-    DebugMetadataEnable = DEBUG_METADATA_ENABLE,
+    DebugMetadataEnable = libcamera_sys::root::libcamera::controls::controls_DEBUG_METADATA_ENABLE,
     /// Control for AE metering trigger. Currently identical to
     /// ANDROID_CONTROL_AE_PRECAPTURE_TRIGGER.
     ///
     /// Whether the camera device will trigger a precapture metering sequence
     /// when it processes this request.
     #[cfg(feature = "vendor_draft")]
-    AePrecaptureTrigger = AE_PRECAPTURE_TRIGGER,
+    AePrecaptureTrigger = libcamera_sys::root::libcamera::controls::draft::draft_AE_PRECAPTURE_TRIGGER,
     /// Control to select the noise reduction algorithm mode. Currently
     /// identical to ANDROID_NOISE_REDUCTION_MODE.
     ///
     ///  Mode of operation for the noise reduction algorithm.
     #[cfg(feature = "vendor_draft")]
-    NoiseReductionMode = NOISE_REDUCTION_MODE,
+    NoiseReductionMode = libcamera_sys::root::libcamera::controls::draft::draft_NOISE_REDUCTION_MODE,
     /// Control to select the color correction aberration mode. Currently
     /// identical to ANDROID_COLOR_CORRECTION_ABERRATION_MODE.
     ///
     ///  Mode of operation for the chromatic aberration correction algorithm.
     #[cfg(feature = "vendor_draft")]
-    ColorCorrectionAberrationMode = COLOR_CORRECTION_ABERRATION_MODE,
+    ColorCorrectionAberrationMode = libcamera_sys::root::libcamera::controls::draft::draft_COLOR_CORRECTION_ABERRATION_MODE,
     /// Control to report the current AE algorithm state. Currently identical to
     /// ANDROID_CONTROL_AE_STATE.
     ///
     ///  Current state of the AE algorithm.
     #[cfg(feature = "vendor_draft")]
-    AeState = AE_STATE,
+    AeState = libcamera_sys::root::libcamera::controls::draft::draft_AE_STATE,
     /// Control to report the current AWB algorithm state. Currently identical
     /// to ANDROID_CONTROL_AWB_STATE.
     ///
     ///  Current state of the AWB algorithm.
     #[cfg(feature = "vendor_draft")]
-    AwbState = AWB_STATE,
+    AwbState = libcamera_sys::root::libcamera::controls::draft::draft_AWB_STATE,
     /// Control to report the time between the start of exposure of the first
     /// row and the start of exposure of the last row. Currently identical to
     /// ANDROID_SENSOR_ROLLING_SHUTTER_SKEW
     #[cfg(feature = "vendor_draft")]
-    SensorRollingShutterSkew = SENSOR_ROLLING_SHUTTER_SKEW,
+    SensorRollingShutterSkew = libcamera_sys::root::libcamera::controls::draft::draft_SENSOR_ROLLING_SHUTTER_SKEW,
     /// Control to report if the lens shading map is available. Currently
     /// identical to ANDROID_STATISTICS_LENS_SHADING_MAP_MODE.
     #[cfg(feature = "vendor_draft")]
-    LensShadingMapMode = LENS_SHADING_MAP_MODE,
+    LensShadingMapMode = libcamera_sys::root::libcamera::controls::draft::draft_LENS_SHADING_MAP_MODE,
     /// Specifies the number of pipeline stages the frame went through from when
     /// it was exposed to when the final completed result was available to the
     /// framework. Always less than or equal to PipelineMaxDepth. Currently
@@ -532,18 +532,18 @@ pub enum ControlId {
     /// detection, additional format conversions etc) count as an additional
     /// pipeline stage.
     #[cfg(feature = "vendor_draft")]
-    PipelineDepth = PIPELINE_DEPTH,
+    PipelineDepth = libcamera_sys::root::libcamera::controls::draft::draft_PIPELINE_DEPTH,
     /// The maximum number of frames that can occur after a request (different
     /// than the previous) has been submitted, and before the result's state
     /// becomes synchronized. A value of -1 indicates unknown latency, and 0
     /// indicates per-frame control. Currently identical to
     /// ANDROID_SYNC_MAX_LATENCY.
     #[cfg(feature = "vendor_draft")]
-    MaxLatency = MAX_LATENCY,
+    MaxLatency = libcamera_sys::root::libcamera::controls::draft::draft_MAX_LATENCY,
     /// Control to select the test pattern mode. Currently identical to
     /// ANDROID_SENSOR_TEST_PATTERN_MODE.
     #[cfg(feature = "vendor_draft")]
-    TestPatternMode = TEST_PATTERN_MODE,
+    TestPatternMode = libcamera_sys::root::libcamera::controls::draft::draft_TEST_PATTERN_MODE,
     /// Control to select the face detection mode used by the pipeline.
     ///
     /// Currently identical to ANDROID_STATISTICS_FACE_DETECT_MODE.
@@ -553,7 +553,7 @@ pub enum ControlId {
     /// \sa FaceDetectFaceLandmarks
     /// \sa FaceDetectFaceIds
     #[cfg(feature = "vendor_draft")]
-    FaceDetectMode = FACE_DETECT_MODE,
+    FaceDetectMode = libcamera_sys::root::libcamera::controls::draft::draft_FACE_DETECT_MODE,
     /// Boundary rectangles of the detected faces. The number of values is
     /// the number of detected faces.
     ///
@@ -561,7 +561,7 @@ pub enum ControlId {
     ///
     /// Currently identical to ANDROID_STATISTICS_FACE_RECTANGLES.
     #[cfg(feature = "vendor_draft")]
-    FaceDetectFaceRectangles = FACE_DETECT_FACE_RECTANGLES,
+    FaceDetectFaceRectangles = libcamera_sys::root::libcamera::controls::draft::draft_FACE_DETECT_FACE_RECTANGLES,
     /// Confidence score of each of the detected faces. The range of score is
     /// [0, 100]. The number of values should be the number of faces reported
     /// in FaceDetectFaceRectangles.
@@ -570,7 +570,7 @@ pub enum ControlId {
     ///
     /// Currently identical to ANDROID_STATISTICS_FACE_SCORES.
     #[cfg(feature = "vendor_draft")]
-    FaceDetectFaceScores = FACE_DETECT_FACE_SCORES,
+    FaceDetectFaceScores = libcamera_sys::root::libcamera::controls::draft::draft_FACE_DETECT_FACE_SCORES,
     /// Array of human face landmark coordinates in format [..., left_eye_i,
     /// right_eye_i, mouth_i, left_eye_i+1, ...], with i = index of face. The
     /// number of values should be 3 * the number of faces reported in
@@ -580,7 +580,7 @@ pub enum ControlId {
     ///
     /// Currently identical to ANDROID_STATISTICS_FACE_LANDMARKS.
     #[cfg(feature = "vendor_draft")]
-    FaceDetectFaceLandmarks = FACE_DETECT_FACE_LANDMARKS,
+    FaceDetectFaceLandmarks = libcamera_sys::root::libcamera::controls::draft::draft_FACE_DETECT_FACE_LANDMARKS,
     /// Each detected face is given a unique ID that is valid for as long as the
     /// face is visible to the camera device. A face that leaves the field of
     /// view and later returns may be assigned a new ID. The number of values
@@ -590,7 +590,7 @@ pub enum ControlId {
     ///
     /// Currently identical to ANDROID_STATISTICS_FACE_IDS.
     #[cfg(feature = "vendor_draft")]
-    FaceDetectFaceIds = FACE_DETECT_FACE_IDS,
+    FaceDetectFaceIds = libcamera_sys::root::libcamera::controls::draft::draft_FACE_DETECT_FACE_IDS,
     /// Toggles the Raspberry Pi IPA to output the hardware generated statistics.
     ///
     /// When this control is set to true, the IPA outputs a binary dump of the
@@ -599,7 +599,7 @@ pub enum ControlId {
     ///
     /// \sa Bcm2835StatsOutput
     #[cfg(feature = "vendor_rpi")]
-    StatsOutputEnable = STATS_OUTPUT_ENABLE,
+    StatsOutputEnable = libcamera_sys::root::libcamera::controls::rpi::rpi_STATS_OUTPUT_ENABLE,
     /// Span of the BCM2835 ISP generated statistics for the current frame.
     ///
     /// This is sent in the Request metadata if the StatsOutputEnable is set to
@@ -608,7 +608,7 @@ pub enum ControlId {
     ///
     /// \sa StatsOutputEnable
     #[cfg(feature = "vendor_rpi")]
-    Bcm2835StatsOutput = BCM2835_STATS_OUTPUT,
+    Bcm2835StatsOutput = libcamera_sys::root::libcamera::controls::rpi::rpi_BCM2835_STATS_OUTPUT,
     /// An array of rectangles, where each singular value has identical
     /// functionality to the ScalerCrop control. This control allows the
     /// Raspberry Pi pipeline handler to control individual scaler crops per
@@ -631,7 +631,7 @@ pub enum ControlId {
     ///
     /// \sa ScalerCrop
     #[cfg(feature = "vendor_rpi")]
-    ScalerCrops = SCALER_CROPS,
+    ScalerCrops = libcamera_sys::root::libcamera::controls::rpi::rpi_SCALER_CROPS,
 }
 /// Enable or disable the AE.
 ///

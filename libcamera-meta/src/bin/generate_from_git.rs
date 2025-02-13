@@ -297,7 +297,27 @@ mod generate_rust {
                 "    {}{} = {},\n",
                 vendor_feature_gate(ctrl),
                 &ctrl.name,
-                to_c_type_name(&ctrl.name).to_ascii_uppercase()
+                to_c_type_name(
+                    match ty {
+                        ControlsType::Control => {
+                            match ctrl.vendor.as_str() {
+                                "libcamera" => "libcamera_sys::root::libcamera::controls::controls_",
+                                "draft" => "libcamera_sys::root::libcamera::controls::draft::draft_",
+                                "rpi" => "libcamera_sys::root::libcamera::controls::rpi::rpi_",
+                                _ => unimplemented!(),
+                            }
+                        }
+                        ControlsType::Property => {
+                            match ctrl.vendor.as_str() {
+                                "libcamera" => "libcamera_sys::root::libcamera::properties::properties_",
+                                "draft" => "libcamera_sys::root::libcamera::properties::draft::draft_",
+                                "rpi" => "libcamera_sys::root::libcamera::properties::rpi::rpi_",
+                                _ => unimplemented!(),
+                            }
+                        }
+                    },
+                    &ctrl.name
+                )
             );
         }
         out += "}\n";
@@ -429,7 +449,7 @@ mod generate_rust {
                 use crate::control::{{Control, Property, ControlEntry, DynControlEntry}};
                 use crate::control_value::{{ControlValue, ControlValueError}};
                 #[allow(unused_imports)]
-                use crate::geometry::{{Rectangle, Size}};
+                use crate::geometry::{{Rectangle, Size, Point}};
                 #[allow(unused_imports)]
                 use libcamera_sys::*;
 
@@ -441,8 +461,9 @@ mod generate_rust {
     }
 }
 
-pub fn to_c_type_name(str: &str) -> String {
+pub fn to_c_type_name(prefix: &'static str, str: &str) -> String {
     let mut out = String::new();
+    out.push_str(prefix);
     let chars = str.chars().collect::<Vec<_>>();
 
     for i in 0..chars.len() {
@@ -470,7 +491,7 @@ pub fn to_c_type_name(str: &str) -> String {
             }
         }
 
-        out.push(chars[i].to_ascii_lowercase());
+        out.push(chars[i].to_ascii_uppercase());
     }
 
     out

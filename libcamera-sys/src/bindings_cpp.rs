@@ -4,6 +4,18 @@
 pub mod root {
     #[allow(unused_imports)]
     use self::super::root;
+    pub mod std {
+        #[allow(unused_imports)]
+        use self::super::super::root;
+        pub mod __detail {
+            #[allow(unused_imports)]
+            use self::super::super::super::root;
+        }
+    }
+    pub mod __gnu_cxx {
+        #[allow(unused_imports)]
+        use self::super::super::root;
+    }
     pub mod __pstl {
         #[allow(unused_imports)]
         use self::super::super::root;

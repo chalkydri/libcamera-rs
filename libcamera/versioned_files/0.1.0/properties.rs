@@ -4,14 +4,14 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use crate::control::{Control, Property, ControlEntry, DynControlEntry};
 use crate::control_value::{ControlValue, ControlValueError};
 #[allow(unused_imports)]
-use crate::geometry::{Rectangle, Size};
+use crate::geometry::{Rectangle, Size, Point};
 #[allow(unused_imports)]
 use libcamera_sys::*;
 #[derive(Debug, Clone, Copy, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]
 #[repr(u32)]
 pub enum PropertyId {
     /// Camera mounting location
-    Location = LOCATION,
+    Location = libcamera_sys::root::libcamera::properties::properties_LOCATION,
     /// The camera rotation is expressed as the angular difference in degrees
     /// between two reference systems, one relative to the camera module, and
     /// one defined on the external world scene to be captured when projected
@@ -402,7 +402,7 @@ pub enum PropertyId {
     ///                       |                    |
     ///                       |                    |
     ///                       +--------------------+
-    Rotation = ROTATION,
+    Rotation = libcamera_sys::root::libcamera::properties::properties_ROTATION,
     /// The model name shall to the extent possible describe the sensor. For
     /// most devices this is the model name of the sensor. While for some
     /// devices the sensor model is unavailable as the sensor or the entire
@@ -422,7 +422,7 @@ pub enum PropertyId {
     /// shall be encoded in ASCII.
     ///
     /// Example model names are 'ov5670', 'imx219' or 'Logitech Webcam C930e'.
-    Model = MODEL,
+    Model = libcamera_sys::root::libcamera::properties::properties_MODEL,
     /// The pixel unit cell physical size, in nanometers.
     ///
     /// The UnitCellSize properties defines the horizontal and vertical sizes of
@@ -432,7 +432,7 @@ pub enum PropertyId {
     ///
     /// The property can be used to calculate the physical size of the sensor's
     /// pixel array area and for calibration purposes.
-    UnitCellSize = UNIT_CELL_SIZE,
+    UnitCellSize = libcamera_sys::root::libcamera::properties::properties_UNIT_CELL_SIZE,
     /// The camera sensor pixel array readable area vertical and horizontal
     /// sizes, in pixels.
     ///
@@ -508,7 +508,7 @@ pub enum PropertyId {
     /// \todo Rename this property to Size once we will have property
     /// ```text
     ///       categories (i.e. Properties::PixelArray::Size)
-    PixelArraySize = PIXEL_ARRAY_SIZE,
+    PixelArraySize = libcamera_sys::root::libcamera::properties::properties_PIXEL_ARRAY_SIZE,
     /// The pixel array region(s) which contain optical black pixels
     /// considered valid for calibration purposes.
     ///
@@ -608,7 +608,7 @@ pub enum PropertyId {
     /// \todo Rename this property to Size once we will have property
     /// ```text
     ///       categories (i.e. Properties::PixelArray::OpticalBlackRectangles)
-    PixelArrayOpticalBlackRectangles = PIXEL_ARRAY_OPTICAL_BLACK_RECTANGLES,
+    PixelArrayOpticalBlackRectangles = libcamera_sys::root::libcamera::properties::properties_PIXEL_ARRAY_OPTICAL_BLACK_RECTANGLES,
     /// The PixelArrayActiveAreas property defines the (possibly multiple and
     /// overlapping) portions of the camera sensor readable pixel matrix
     /// which are considered valid for image acquisition purposes.
@@ -686,7 +686,7 @@ pub enum PropertyId {
     /// \todo Rename this property to ActiveAreas once we will have property
     /// ```text
     ///       categories (i.e. Properties::PixelArray::ActiveAreas)
-    PixelArrayActiveAreas = PIXEL_ARRAY_ACTIVE_AREAS,
+    PixelArrayActiveAreas = libcamera_sys::root::libcamera::properties::properties_PIXEL_ARRAY_ACTIVE_AREAS,
     /// The maximum valid rectangle for the controls::ScalerCrop control. This
     /// reflects the minimum mandatory cropping applied in the camera sensor and
     /// the rest of the pipeline. Just as the ScalerCrop control, it defines a
@@ -698,7 +698,7 @@ pub enum PropertyId {
     ///
     /// \todo Turn this property into a "maximum control value" for the
     /// ScalerCrop control once "dynamic" controls have been implemented.
-    ScalerCropMaximum = SCALER_CROP_MAXIMUM,
+    ScalerCropMaximum = libcamera_sys::root::libcamera::properties::properties_SCALER_CROP_MAXIMUM,
     /// The relative sensitivity of the chosen sensor mode.
     ///
     /// Some sensors have readout modes with different sensitivities. For example,
@@ -707,18 +707,18 @@ pub enum PropertyId {
     /// signalled by the binned mode, when it is chosen, indicating a value here
     /// that is twice that of the full resolution mode. This value will be valid
     /// after the configure method has returned successfully.
-    SensorSensitivity = SENSOR_SENSITIVITY,
+    SensorSensitivity = libcamera_sys::root::libcamera::properties::properties_SENSOR_SENSITIVITY,
     /// A list of integer values of type dev_t denoting the major and minor
     /// device numbers of the underlying devices used in the operation of this
     /// camera.
     ///
     /// Different cameras may report identical devices.
-    SystemDevices = SYSTEM_DEVICES,
+    SystemDevices = libcamera_sys::root::libcamera::properties::properties_SYSTEM_DEVICES,
     /// The arrangement of color filters on sensor; represents the colors in the
     /// top-left 2x2 section of the sensor, in reading order. Currently
     /// identical to ANDROID_SENSOR_INFO_COLOR_FILTER_ARRANGEMENT.
     #[cfg(feature = "vendor_draft")]
-    ColorFilterArrangement = COLOR_FILTER_ARRANGEMENT,
+    ColorFilterArrangement = libcamera_sys::root::libcamera::properties::draft::draft_COLOR_FILTER_ARRANGEMENT,
 }
 /// Camera mounting location
 #[derive(Debug, Clone, Copy, Eq, PartialEq, TryFromPrimitive, IntoPrimitive)]

@@ -82,11 +82,11 @@ fn main() {
             .clang_arg("-std=c++17")
             .enable_cxx_namespaces()
             .wrap_static_fns(true)
-            .blocklist_item("std::.*")
-            .blocklist_item("__gnu_cxx::.*")
+            //.blocklist_item("std::.*")
+            //.blocklist_item("__gnu_cxx::.*")
             //.allowlist_var("libcamera::.*");
-            .allowlist_type(".*controls.*")
-            .allowlist_type(".*properties.*");
+            .allowlist_type("libcamera::controls::.*")
+            .allowlist_type("libcamera::properties::.*");
         for header in cpp_api_headers {
             builder = builder.header(header.to_str().unwrap());
         }
