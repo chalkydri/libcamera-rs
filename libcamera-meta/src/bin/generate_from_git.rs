@@ -31,8 +31,7 @@ fn main() {
     let git_dir = Path::new("libcamera-git");
 
     let repo = Repository::open(git_dir).unwrap_or_else(|_| {
-        Repository::clone("https://git.libcamera.org/libcamera/libcamera.git", git_dir)
-            .expect("Failed to clone libcamera")
+        Repository::clone("https://github.com/raspberrypi/libcamera.git", git_dir).expect("Failed to clone libcamera")
     });
 
     if let Some(mut remote) = repo.remotes().ok().and_then(|remote_names| {
